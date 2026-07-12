@@ -131,7 +131,7 @@ function Login() {
           </p>
 
           <Link
-            to="/register"
+            to="/signup"
             className="mt-3 inline-block font-semibold text-blue-600 hover:text-blue-700"
           >
             Create Account

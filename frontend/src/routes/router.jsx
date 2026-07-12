@@ -7,6 +7,7 @@ import JobDetails from "../pages/JobDetails.jsx";
 import CompanyDetails from "../pages/CompanyDetails.jsx";
 import Profile from "../pages/Profile.jsx";
 import Login from "../pages/Login.jsx";
+import Signup from "../pages/Signup";
 
 export const router = createBrowserRouter([
 
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
             {
                 path: "/login",
                 element: <Login/>,
+            },
+            {
+                path: "/signup",
+                element: <Signup/>,
             }
         ]
     },

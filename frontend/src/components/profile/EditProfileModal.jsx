@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { Camera, X } from "lucide-react";
+import { toast } from "sonner";
+import api from "../../api/axios";
+import { update } from "../../store/auth";
+import { useDispatch } from "react-redux";
 
-function EditProfileModal({ close, user }) {
+function EditProfileModal({ close, user, setUser }) {
+
+    const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -10,6 +17,39 @@ function EditProfileModal({ close, user }) {
   });
 
   const [preview, setPreview] = useState("");
+
+  const onSaveChanges = async() => {
+    try {
+        const data = new FormData();
+
+        data.append("name", formData.name);
+        data.append("phone", formData.phone);
+        data.append("location", formData.location);
+
+        if (formData.avatar) {
+        data.append("avatar", formData.avatar);
+        }
+
+        const res = await api.patch("/auth/me/update", data);
+        dispatch(
+            update({
+                isLoggenIn: true,
+                id: res.data.data._id,
+                role: res.data.data.role,
+                name: res.data.data.name,
+                avatar: res.data.data.avatar,
+            })
+        )
+        setUser(res.data.data);
+
+        toast.success("Profile Update Succesfully");
+        close();
+    } catch (err) {
+        console.log(err);
+        const message = err.response?.data?.message || "Unable to update";
+        toast.error(message);
+    }
+  }
 
   useEffect(() => {
     setFormData({
@@ -169,6 +209,7 @@ function EditProfileModal({ close, user }) {
 
           <button
             className="rounded-xl bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700"
+            onClick={onSaveChanges}
           >
             Save Changes
           </button>

@@ -1,19 +1,55 @@
 import { useState } from "react";
-import { Mail, Phone, MapPin, UserRound, Pencil, LogOut } from "lucide-react";
+import { Mail, Phone, MapPin, Pencil, LogOut, KeyRound } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import EditProfileModal from "./EditProfileModal";
 import { useEffect } from "react";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import api from "../../api/axios";
-import  {update, logout} from "../../store/auth";
+import { update, logout } from "../../store/auth";
+import { useNavigate } from "react-router-dom";
 
 function UserDetails() {
   const { isLoggedIn, name, avatar, role } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   const [editOpen, setEditOpen] = useState(false);
+
+  const handleLogOut = async () => {
+    try {
+      const res = await api.post("/auth/logout");
+
+      dispatch(logout());
+      toast.success("User logged out succesfully");
+      navigate("/");
+    } catch (err) {
+      const message = err.response?.data?.message || "Error occured";
+      toast.error(message);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setUpdating(true);
+    try {
+      const res = await api.patch("/auth/password", {
+        password: newPassword,
+      });
+
+      toast.success("Password Changed succesfully");
+      setPasswordOpen(false);
+    } catch (err) {
+      console.log(err);
+      const message = err.response?.data?.message || "Error occured";
+      toast.error(message);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,11 +68,12 @@ function UserDetails() {
         );
       } catch (err) {
         console.log(err);
-        const message = err.response?.data?.message ||"Unable to fetch from server"
+        const message =
+          err.response?.data?.message || "Unable to fetch from server";
         toast.error(message);
       } finally {
         setLoading(false);
-      } 
+      }
     };
 
     fetchProfile();
@@ -119,15 +156,74 @@ function UserDetails() {
             <Pencil size={18} />
             Edit Profile
           </button>
-
-          <button className="flex items-center gap-2 rounded-xl bg-red-500 px-5 py-3 font-medium text-white transition hover:bg-red-600">
+          <button
+            onClick={() => setPasswordOpen(true)}
+            className="flex items-center gap-2 rounded-xl border border-amber-500 px-5 py-3 font-medium text-amber-600 transition hover:bg-amber-50"
+            disabled={updating}
+          >
+            <KeyRound size={18} />
+            {updating ? "Changing Password..." : "Change Password"}
+          </button>
+          <button
+            className="flex items-center gap-2 rounded-xl bg-red-500 px-5 py-3 font-medium text-white transition hover:bg-red-600"
+            onClick={handleLogOut}
+          >
             <LogOut size={18} />
             Logout
           </button>
         </div>
       </div>
 
-      {editOpen && <EditProfileModal close={() => setEditOpen(false)} />}
+      {editOpen && (
+        <EditProfileModal
+          close={() => setEditOpen(false)}
+          user={user}
+          setUser={setUser}
+        />
+      )}
+
+      {passwordOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setPasswordOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-semibold">Change Password</h2>
+
+            <p className="mt-2 text-gray-500">Enter your new password below.</p>
+
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              className="mt-6 w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500"
+            />
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setPasswordOpen(false);
+                  setNewPassword("");
+                }}
+                className="rounded-xl border px-5 py-3 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+
+              <button
+                className="rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+                onClick={handleChangePassword}
+              >
+                Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
