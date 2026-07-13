@@ -35,13 +35,18 @@ const CompanyCard = ({ company }) => {
         <div className="flex justify-between">
           <span className="font-semibold text-gray-700">Employees</span>
           <span className="text-gray-600">
-            {company.employees.toLocaleString()}
+            {company.employees
+              ? company.employees.toLocaleString()
+              : "Not Added Yet"}
           </span>
         </div>
 
         <div className="flex justify-between">
           <span className="font-semibold text-gray-700">Founded</span>
-          <span className="text-gray-600">{company.founded}</span>
+          <span className="text-gray-600">{company.founded
+    ? company.founded.toLocaleString()
+    : "Not Added Yet"}
+</span>
         </div>
 
         <div className="flex justify-between">

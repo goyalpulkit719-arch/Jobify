@@ -19,5 +19,7 @@ router.delete('/delete/:companyId', authMiddleware.authCompany, companyMiddlewar
 
 router.get('/myJobs', authMiddleware.authCompany, companyController.getMyJobs);
 
+router.get('/dashboard', authMiddleware.authCompany, companyController.getDashboard);
+
 
 module.exports = router;

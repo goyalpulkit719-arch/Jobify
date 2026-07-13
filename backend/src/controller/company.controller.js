@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const userModel = require('../model/user.model');
 const companyModel = require('../model/company.model');
 const jobModel = require('../model/job.model');
+const applicationModel = require('../model/application.model');
 const { uploadFile } = require('../services/storage.service');  
 
 
@@ -242,7 +243,6 @@ async function deleteCompany(req, res) {
             message: "Internal Server Error",
         });
     }
-
 }
 
 
@@ -332,5 +332,73 @@ async function getMyJobs(req, res) {
 };
 
 
-module.exports = { registerCompany, getAllCompanies, getCompany, modifyCompany, deleteCompany, getMyJobs }
+async function getDashboard(req, res) {
+
+    try{
+
+        const company = await companyModel.findOne({owner: req.user.id});
+
+        if(!company) {
+            return res.status(200).json({success: true, hasCompany: false, message: "Create company first"});
+        }
+
+        const jobs = await jobModel.find({company: company._id}).sort({createdAt: -1});
+
+        const jobIds = jobs.map(job => job._id);
+
+        const applications = await applicationModel.find({
+            jobs: {$in: jobIds}
+        })
+
+        const recentJobs = jobs.slice(0, 5).map((job) => ({
+            _id: job._id,
+            title: job.title,
+            isActive: job.isActive,
+            createdAt: job.createdAt,
+
+        }))
+
+        totalJobs = jobs.length
+
+        activeJobs = jobs.filter(job => job.isActive).length
+
+        inactiveJobs = totalJobs - activeJobs
+
+        totalApplications = applications.length
+
+        applied = applications.filter(a => a.status === "Applied").length
+
+        shortlisted = applications.filter(a => a.status === "Shortlisted").length
+
+        interview = applications.filter(a => a.status === "Interview").length
+
+        hired = applications.filter(a => a.status === "Hired").length
+
+        rejected = applications.filter(a => a.status === "Rejected").length
+
+        return res.status(200).json({
+            success: true,
+            message: "Company Dashboard Fetched successfully",
+            hasCompany: true,
+            data: {
+                company,
+                overview : {
+                    totalJobs, activeJobs, inactiveJobs, totalApplications
+                },
+                applicationStats: {
+                    applied, shortlisted, interview, hired, rejected,
+                }, 
+                recentJobs,
+            }
+        })
+
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(500).json({success: false, message: "Internal Server Error"});
+    }
+
+}
+
+module.exports = { registerCompany, getAllCompanies, getCompany, modifyCompany, deleteCompany, getMyJobs, getDashboard }
 
