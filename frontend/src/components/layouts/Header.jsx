@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-// import { authActions } from "../../store/auth";
-// import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { FaRegCircleUser } from "react-icons/fa6";
 
@@ -83,7 +81,15 @@ function NoLoginHeader() {
                       {item.name}
                   </Link>
               ))}
+              <Link
+                      key={"/profile"}
+                      to={"/profile"}
+                      className="font-medium text-gray-700 hover:text-blue-600"
+                  >
+                      Profile
+                  </Link>
           </nav>
+          
         )}
       </header>
     </>

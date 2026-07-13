@@ -8,6 +8,8 @@ import CompanyDetails from "../pages/CompanyDetails.jsx";
 import Profile from "../pages/Profile.jsx";
 import Login from "../pages/Login.jsx";
 import Signup from "../pages/Signup";
+import Applied from "../pages/Applied.jsx";
+import ApplicationDetails from "../pages/ApplicationDetails.jsx";
 
 export const router = createBrowserRouter([
 
@@ -46,7 +48,15 @@ export const router = createBrowserRouter([
             {
                 path: "/signup",
                 element: <Signup/>,
-            }
+            },
+            {
+                path: "/applied",
+                element: <Applied/>,
+            },
+            {
+                path: "/applied/:id",
+                element: <ApplicationDetails/>,
+            },
         ]
     },
     

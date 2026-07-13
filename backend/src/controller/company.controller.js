@@ -347,7 +347,7 @@ async function getDashboard(req, res) {
         const jobIds = jobs.map(job => job._id);
 
         const applications = await applicationModel.find({
-            jobs: {$in: jobIds}
+            job: {$in: jobIds}
         })
 
         const recentJobs = jobs.slice(0, 5).map((job) => ({

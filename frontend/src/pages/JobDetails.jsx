@@ -1,72 +1,81 @@
-import {X,Building2,MapPin,IndianRupee,BriefcaseBusiness,Calendar, Gift,} from "lucide-react";
+import {
+  X,
+  Building2,
+  MapPin,
+  IndianRupee,
+  BriefcaseBusiness,
+  Calendar,
+  Gift,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import JobDetailsSkeleton from "../components/jobs/JobDetailsSkeleton";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addApplication } from "../store/application";
 
 function JobDetails() {
+  const dispatch = useDispatch();
+  const { isLoggedIn, role } = useSelector((state) => state.auth);
+  const applications = useSelector((state) => state.application.applications);
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [job, setJob] = useState({});
 
-    const {isLoggedIn, role} = useSelector(state => state.auth);
-    const {id} = useParams();
-    const [loading, setLoading] = useState(true);
-    const [job, setJob] = useState({});
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        const res = await api.get(`/job/details/${id}`);
 
-    useEffect(() => {
+        setJob(res.data.data);
+      } catch (err) {
+        console.log(err);
+        const message =
+          err.response?.data?.message || "Unable to load featured jobs.";
 
-        const fetchJobDetails = async() => {
-            try {
-                const res = await api.get(`/job/details/${id}`);
+        toast.error(message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                setJob(res.data.data);
-            }
-            catch(err) {
-                console.log(err);
-                const message =
-                err.response?.data?.message ||
-                "Unable to load featured jobs.";
+    fetchJobDetails();
+  }, [id]);
 
-                toast.error(message);
-            }
-            finally{
-                setLoading(false);
-            }
-        }
-        
-        fetchJobDetails();
-
-    }, [id]);
+  const isApplied = applications.some(
+    (application) => application.job._id === job._id,
+  );
 
   const onApply = async () => {
-
-    if(!isLoggedIn) logInReq();
-    else {
-        console.log("Reached here response");
-        const response = {success: true, message: "Application submitted successfully"};
-        if(response.success) {
-          toast.success(response.message);
-        }
-        else{
-          toast.error(response.message);
-        }
+    if (!isLoggedIn) {
+      logInReq();
+      return;
     }
-  }
 
-  if(loading) {
-    return 
-    <section className="min-h-screen bg-gray-50 py-10 px-4">
-        <JobDetailsSkeleton></JobDetailsSkeleton>
-    </section>
+    try {
+      const res = await api.post(`/application/apply/${job._id}`);
+
+      dispatch(addApplication(res.data.data));
+
+      toast.success(res.data.message);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Unable to apply.");
+    }
+  };
+
+  if (loading) {
+    return(<section className="min-h-screen bg-gray-50 py-10 px-4">
+      <JobDetailsSkeleton></JobDetailsSkeleton>
+    </section>)
   }
 
   return (
     <section className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="mx-auto max-w-4xl">
-
         {/* Top Card */}
         <div className="relative rounded-2xl bg-white p-8 shadow-sm">
-
           {/* Close */}
           <Link
             to="/jobs"
@@ -76,7 +85,6 @@ function JobDetails() {
           </Link>
 
           <div className="flex flex-col items-center text-center">
-
             {job.company.logo ? (
               <img
                 src={job.company.logo}
@@ -93,12 +101,9 @@ function JobDetails() {
               {job.title}
             </h1>
 
-            <p className="mt-2 text-lg text-gray-600">
-              {job.company.name}
-            </p>
+            <p className="mt-2 text-lg text-gray-600">{job.company.name}</p>
 
             <div className="mt-6 flex flex-wrap justify-center gap-4">
-
               <span className="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-blue-700">
                 <IndianRupee size={18} />
                 {job.minSalary} - {job.maxSalary} LPA
@@ -118,39 +123,28 @@ function JobDetails() {
                 <BriefcaseBusiness size={18} />
                 {job.employmentType}
               </span>
-
             </div>
-
           </div>
         </div>
 
         {/* Details */}
         <div className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
-
           {/* Description */}
           <div>
+            <h2 className="text-2xl font-semibold">Job Description</h2>
 
-            <h2 className="text-2xl font-semibold">
-              Job Description
-            </h2>
-
-            <p className="mt-4 leading-8 text-gray-600">
-              {job.description}
-            </p>
-
+            <p className="mt-4 leading-8 text-gray-600">{job.description}</p>
           </div>
 
           {/* Benefits */}
 
           <div className="mt-10">
-
             <h2 className="flex items-center gap-2 text-2xl font-semibold">
               <Gift size={24} />
               Benefits
             </h2>
 
             <div className="mt-4 flex flex-wrap gap-3">
-
               {job.benefits.length ? (
                 job.benefits.map((benefit) => (
                   <span
@@ -161,51 +155,37 @@ function JobDetails() {
                   </span>
                 ))
               ) : (
-                <p className="text-gray-500">
-                  No benefits mentioned.
-                </p>
+                <p className="text-gray-500">No benefits mentioned.</p>
               )}
-
             </div>
-
           </div>
 
           {/* Company */}
 
           <div className="mt-10 grid gap-5 md:grid-cols-2">
-
             <div className="rounded-xl border p-5">
+              <h3 className="font-semibold text-gray-900">Company</h3>
 
-              <h3 className="font-semibold text-gray-900">
-                Company
-              </h3>
-
-              <p className="mt-3 text-gray-600">
-                {job.company.name}
-              </p>
+              <p className="mt-3 text-gray-600">{job.company.name}</p>
 
               <a
-                href={job.company.website}
+                href={`https://${job.company.website}`}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-2 inline-block text-blue-600 hover:underline"
               >
                 Visit Website
               </a>
-
             </div>
 
             <div className="rounded-xl border p-5">
-
               <h3 className="font-semibold text-gray-900">
                 Additional Information
               </h3>
 
               <div className="mt-3 space-y-3 text-gray-600">
-
                 <p>
-                  <strong>Created By:</strong>{" "}
-                  {job.createdBy.name}
+                  <strong>Created By:</strong> {job.createdBy.name}
                 </p>
 
                 <p className="flex items-center gap-2">
@@ -213,20 +193,25 @@ function JobDetails() {
 
                   {new Date(job.createdAt).toLocaleDateString()}
                 </p>
-
               </div>
-
             </div>
-
           </div>
 
           {/* Apply */}
 
-          {(!isLoggedIn || role==="candidate")  && <button className="mt-10 w-full rounded-xl bg-blue-600 py-4 text-lg font-semibold text-white transition hover:bg-blue-700"
-          onClick={onApply}>
-            Apply Now
-          </button>}
-
+          {(!isLoggedIn || role === "candidate") && (
+            <button
+              onClick={onApply}
+              disabled={isApplied}
+              className={`mt-10 w-full rounded-xl py-4 text-lg font-semibold text-white transition ${
+                isApplied
+                  ? "bg-green-600 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {isApplied ? "Applied" : "Apply Now"}
+            </button>
+          )}
         </div>
       </div>
     </section>
