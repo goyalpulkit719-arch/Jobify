@@ -3,7 +3,8 @@ import { toast } from "sonner";
 import api from "../../api/axios";
 import { useNavigate, useNavigationType } from "react-router-dom";
 
-function ApplicationCard({ application, refresh }) {
+function ApplicationCardCompany({ application, refresh }) {
+  const date = application.appliedAt || application.createdAt;
   const navigate = useNavigate();
   const [status, setStatus] = useState(application.status);
   const [loading, setLoading] = useState(false);
@@ -63,7 +64,8 @@ function ApplicationCard({ application, refresh }) {
             className="font-semibold text-lg"
             onClick={() =>
               navigate(`/company/candidate/${application.candidate._id}`)
-            }>
+            }
+          >
             {application.candidate.name}
           </h3>
 
@@ -74,7 +76,12 @@ function ApplicationCard({ application, refresh }) {
           </p>
 
           <p className="text-xs text-gray-400 mt-1">
-            Applied on {new Date(application.appliedAt).toLocaleDateString()}
+            Applied on{" "}
+            {new Date(date).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
           </p>
         </div>
       </div>
@@ -100,4 +107,4 @@ function ApplicationCard({ application, refresh }) {
   );
 }
 
-export default ApplicationCard;
+export default ApplicationCardCompany;

@@ -22,7 +22,6 @@ function CompanyJobCard({ job, onEdit, onStatusChanged }) {
 
   const handleApplications = () => {
     navigate(`/company/jobs/${job._id}/applications`);
-    console.log(job.title);
   };
 
   return (

@@ -35,14 +35,12 @@ function Footer() {
           </Link>
 
           <Link
-            to="/about"
             className="transition-colors duration-200 hover:text-blue-400"
           >
             About
           </Link>
 
           <Link
-            to="/contact"
             className="transition-colors duration-200 hover:text-blue-400"
           >
             Contact

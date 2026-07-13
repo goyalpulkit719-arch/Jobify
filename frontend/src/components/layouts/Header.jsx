@@ -84,14 +84,14 @@ function NoLoginHeader() {
                 {item.name}
               </Link>
             ))}
-            <Link
+            {isLoggedIn && <Link
               key={"/profile"}
               to={"/profile"}
               onClick={() => setMenuOpen(false)}
               className="font-medium text-gray-700 hover:text-blue-600"
             >
               Profile
-            </Link>
+            </Link>}
           </nav>
         )}
       </header>

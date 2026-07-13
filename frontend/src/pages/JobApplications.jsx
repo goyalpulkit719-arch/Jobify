@@ -25,7 +25,8 @@ function JobApplications() {
     } catch (error) {
       console.log(error);
       toast.error(
-        error.response?.data?.message || "Failed to fetch applications.",
+        error.response?.data?.message ||
+          "Failed to fetch applications."
       );
     } finally {
       setLoading(false);
@@ -45,6 +46,7 @@ function JobApplications() {
         className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6"
       >
         <FaArrowLeft />
+
         Back
       </button>
 
@@ -54,7 +56,9 @@ function JobApplications() {
         {!loading && (
           <p className="text-gray-500 mt-2">
             {applications.length}{" "}
-            {applications.length === 1 ? "Application" : "Applications"}
+            {applications.length === 1
+              ? "Application"
+              : "Applications"}
           </p>
         )}
       </div>
