@@ -193,7 +193,7 @@ function CandidateProfile() {
 
             {profile.github ? (
               <a
-                href={profile.github}
+                href={`http://${profile.github}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-blue-600 hover:underline"
@@ -215,7 +215,7 @@ function CandidateProfile() {
 
             {profile.linkedin ? (
               <a
-                href={profile.linkedin}
+                href={`http://${profile.linkedin}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-blue-600 hover:underline"

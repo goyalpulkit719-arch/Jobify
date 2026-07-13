@@ -186,7 +186,6 @@ function EditCandidateModal({ close, profile, setProfile }) {
               name="skills"
               value={formData.skills}
               onChange={handleChange}
-              placeholder="React, Node.js, MongoDB"
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>
@@ -220,7 +219,6 @@ function EditCandidateModal({ close, profile, setProfile }) {
               name="projects"
               value={formData.projects}
               onChange={handleChange}
-              placeholder="Jobify, AI Resume Analyzer"
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500"
             />
           </div>

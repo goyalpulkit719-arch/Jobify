@@ -65,11 +65,14 @@ function JobDetails() {
     }
   };
 
+
+
   if (loading) {
     return(<section className="min-h-screen bg-gray-50 py-10 px-4">
       <JobDetailsSkeleton></JobDetailsSkeleton>
     </section>)
   }
+
 
   return (
     <section className="min-h-screen bg-gray-50 py-10 px-4">
@@ -83,6 +86,12 @@ function JobDetails() {
           >
             <X size={24} />
           </Link>
+
+          {job.isActive!==undefined && <span
+            className={`absolute left-6 top-7 rounded-full px-3 py-1 text-sm font-medium ${job.isActive? "bg-green-300 text-gray-600" : "bg-red-300 text-gray-600"}`}
+          >
+            {job.isActive? "Active": "In-Active"}
+          </span>}
 
           <div className="flex flex-col items-center text-center">
             {job.company.logo ? (
@@ -106,7 +115,7 @@ function JobDetails() {
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <span className="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-blue-700">
                 <IndianRupee size={18} />
-                {job.minSalary} - {job.maxSalary} LPA
+                {job.maxSalary===0? "Not disclosed"  :`${job.minSalary} - {job.maxSalary} LPA`}
               </span>
 
               <span className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">

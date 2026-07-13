@@ -8,6 +8,7 @@ import {
 
 function ApplicationCard({ application, onWithdraw }) {
   const { _id, company, job, status, createdAt } = application;
+  const isActive = job.isActive;
 
   const statusColor = {
     Applied: "bg-blue-100 text-blue-700",
@@ -38,24 +39,27 @@ function ApplicationCard({ application, onWithdraw }) {
         )}
 
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {job.title}
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
 
           <p className="mt-1 text-gray-600">{company.name}</p>
         </div>
-
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-medium ${
-            statusColor[status]
-          }`}
-        >
-          {status}
-        </span>
+        <div className="flex flex-col gap-2 justify-center items-center">
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-medium ${isActive? "bg-green-300 text-gray-600" : "bg-red-300 text-gray-600"}`}
+          >
+            {isActive? "Active": "In-Active"}
+          </span>
+          <span
+            className={`rounded-full px-3 py-1 text-sm font-medium ${
+              statusColor[status]
+            }`}
+          >
+            {status}
+          </span>
+        </div>
       </div>
 
       <div className="mt-6 space-y-3 text-gray-700">
-
         <div className="flex items-center gap-2">
           <HiOutlineMapPin className="text-blue-600" />
           <span>{job.location}</span>
@@ -77,14 +81,11 @@ function ApplicationCard({ application, onWithdraw }) {
         </div>
 
         <p className="pt-2 text-sm text-gray-500">
-          Applied on{" "}
-          {new Date(createdAt).toLocaleDateString()}
+          Applied on {new Date(createdAt).toLocaleDateString()}
         </p>
-
       </div>
 
       <div className="mt-8 flex gap-3">
-
         <Link
           to={`/job/${job._id}`}
           className="flex-1 rounded-lg border border-gray-300 py-2 text-center font-medium text-gray-700 transition hover:bg-gray-100"
@@ -100,7 +101,6 @@ function ApplicationCard({ application, onWithdraw }) {
             Withdraw
           </button>
         )}
-
       </div>
     </div>
   );

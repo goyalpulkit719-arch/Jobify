@@ -22,10 +22,9 @@ const companyNav = [
 ];
 
 function NoLoginHeader() {
-
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const {isLoggedIn, role, name, avatar} = useSelector(state => state.auth);
+  const { isLoggedIn, role, name, avatar } = useSelector((state) => state.auth);
 
   let navLinks;
   if (!isLoggedIn) navLinks = guestNav;
@@ -51,17 +50,20 @@ function NoLoginHeader() {
               </Link>
             ))}
             {isLoggedIn && (
-                <Link className="font-medium flex justify-center items-center gap-1 text-gray-700 transition-colors hover:text-blue-600 text-lg" to={"/profile"}>
-                    {avatar ? (
-                        <img
-                            src={avatar}
-                            alt={name}
-                            className="h-10 w-10 rounded-full object-cover border border-gray-200"
-                        />
-                    ) : (
-                        <FaRegCircleUser className="text-4xl" />
-                    )}
-                  <div>Profile</div>
+              <Link
+                className="font-medium flex justify-center items-center gap-1 text-gray-700 transition-colors hover:text-blue-600 text-lg"
+                to={"/profile"}
+              >
+                {avatar ? (
+                  <img
+                    src={avatar}
+                    alt={name}
+                    className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                  />
+                ) : (
+                  <FaRegCircleUser className="text-4xl" />
+                )}
+                <div>Profile</div>
               </Link>
             )}
           </nav>
@@ -72,24 +74,25 @@ function NoLoginHeader() {
         </div>
         {menuOpen && (
           <nav className="flex flex-col gap-4 border-t border-gray-200 bg-white p-4 md:hidden">
-              {navLinks.map((item) => (
-                  <Link
-                      key={item.path}
-                      to={item.path}
-                      className="font-medium text-gray-700 hover:text-blue-600"
-                  >
-                      {item.name}
-                  </Link>
-              ))}
+            {navLinks.map((item) => (
               <Link
-                      key={"/profile"}
-                      to={"/profile"}
-                      className="font-medium text-gray-700 hover:text-blue-600"
-                  >
-                      Profile
-                  </Link>
+                key={item.path}
+                to={item.path}
+                onClick={() => setMenuOpen(false)}
+                className="font-medium text-gray-700 hover:text-blue-600"
+              >
+                {item.name}
+              </Link>
+            ))}
+            <Link
+              key={"/profile"}
+              to={"/profile"}
+              onClick={() => setMenuOpen(false)}
+              className="font-medium text-gray-700 hover:text-blue-600"
+            >
+              Profile
+            </Link>
           </nav>
-          
         )}
       </header>
     </>

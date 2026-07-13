@@ -10,5 +10,7 @@ router.patch('/profile/update', authMiddleware.authCandidate, uploadResume.singl
 
 router.get('/profile', authMiddleware.authCandidate, candidateController.getProfile);
 
+router.get('/profile/:id', authMiddleware.authCompany, candidateController.candidateProfile);
+
 
 module.exports = router;

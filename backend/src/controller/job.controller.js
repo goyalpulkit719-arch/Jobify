@@ -19,7 +19,7 @@ async function registerJob(req, res) {
             return res.status(400).json({success: false, message: "Title, EmploymentType, Location and WorkMode is required"});
         }
 
-        if(Number(req.body.minSalary) >= Number(req.body.maxSalary)) {
+        if(req.body.minSalary && req.body.maxSalary && Number(req.body.minSalary) >= Number(req.body.maxSalary)) {
             return res.status(400).json({success: false, message: "minSalary must be lesser than maxSalary"})
         }
 
@@ -29,8 +29,8 @@ async function registerJob(req, res) {
             company: company._id,
             title: title,
             employmentType: employmentType,
-            minSalary: req.body.minSalary,
-            maxSalary: req.body.maxSalary,
+            minSalary: Number(req.body.minSalary || 0),
+            maxSalary: Number(req.body.maxSalary || 0),
             location: location,
             workMode: workMode,
             benefits: req.body.benefits,

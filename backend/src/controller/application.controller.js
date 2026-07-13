@@ -132,7 +132,7 @@ async function getMyApplications(req, res) {
       .find(filter)
       .populate(
         "job",
-        "title location employmentType workMode minSalary maxSalary",
+        "title location employmentType workMode minSalary maxSalary isActive",
       )
       .populate("company", "name logo")
       .sort(sortOption);
@@ -225,7 +225,7 @@ async function getCompanyApplications(req, res) {
     const applications = await applicationModel
       .find(filter)
       .populate("job", "title")
-      .populate("candidate", "name avatar")
+      .populate("candidate", "name avatar email location")
       .sort({ appliedAt: -1 });
 
     const groupedApplications = {};
@@ -245,7 +245,7 @@ async function getCompanyApplications(req, res) {
         _id: application._id,
         candidate: application.candidate,
         status: application.status,
-        appliedAt: application.appliedAt,
+        appliedAt: application.createdAt,
       });
     });
 
@@ -346,6 +346,62 @@ async function withdrawApplication(req, res) {
   }
 }
 
+async function getJobApplications(req, res) {
+    try {
+        const company = await companyModel.findOne({
+            owner: req.user.id,
+        });
+
+        if (!company) {
+            return res.status(404).json({
+                success: false,
+                message: "Company not found",
+            });
+        }
+
+        const job = await jobModel.findById(req.params.jobId);
+
+        if (!job) {
+            return res.status(404).json({
+                success: false,
+                message: "Job not found",
+            });
+        }
+
+        if (job.company.toString() !== company._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        const applications = await applicationModel
+            .find({ job: job._id })
+            .populate(
+                "candidate",
+                "name avatar email location"
+            )
+            .sort({ appliedAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            message: "Applications fetched successfully",
+            data: {
+                jobTitle: job.title,
+                applications,
+            },
+        });
+
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+}
+
 module.exports = {
   applyJob,
   getMyApplications,
@@ -353,4 +409,5 @@ module.exports = {
   getCompanyApplications,
   updateStatus,
   withdrawApplication,
+  getJobApplications,
 };

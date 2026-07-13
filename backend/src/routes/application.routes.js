@@ -19,4 +19,6 @@ router.patch('/updateStatus/:applicationId', authMiddleware.authCompany, applica
 
 router.delete('/withdraw/:applicationId', authMiddleware.authCandidate, applicationController.withdrawApplication);
 
-module.exports = router;
+router.get("/job/:jobId", authMiddleware.authCompany, applicationController.getJobApplications );
+
+module.exports = router;    

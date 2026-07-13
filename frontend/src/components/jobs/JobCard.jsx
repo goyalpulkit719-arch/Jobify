@@ -43,7 +43,7 @@ function JobCard({ job }) {
     }
   };
 
-  const salary =
+  let salary =
     minSalary === 0 && maxSalary === 0
       ? "Salary Not Disclosed"
       : `₹${minSalary} - ₹${maxSalary} LPA`;

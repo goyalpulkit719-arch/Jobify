@@ -9,6 +9,7 @@ function Applied() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  
   const applications = useSelector(
     (state) => state.application.applications
   );
