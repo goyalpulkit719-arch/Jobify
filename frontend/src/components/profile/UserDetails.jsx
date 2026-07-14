@@ -148,7 +148,7 @@ function UserDetails() {
 
         {/* Buttons */}
 
-        <div className="mt-10 flex justify-end gap-4">
+        <div className="mt-10 flex flex-col justify-end gap-4 sm:flex-row">
           <button
             onClick={() => setEditOpen(true)}
             className="flex items-center gap-2 rounded-xl border border-blue-600 px-5 py-3 font-medium text-blue-600 transition hover:bg-blue-50"
