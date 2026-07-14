@@ -21,6 +21,12 @@ app.use(
   }),
 );
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Jobify Backend API is running 🚀",
+  });
+});
 app.use("/auth", authRoutes);
 app.use("/company", companyRoutes);
 app.use("/job", jobRoutes);
