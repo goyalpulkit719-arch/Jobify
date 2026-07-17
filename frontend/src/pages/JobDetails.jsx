@@ -115,7 +115,7 @@ function JobDetails() {
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               <span className="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-blue-700">
                 <IndianRupee size={18} />
-                {job.maxSalary===0? "Not disclosed"  :`${job.minSalary} - {job.maxSalary} LPA`}
+                {job.maxSalary===0? "Not disclosed"  :`${job.minSalary} - ${job.maxSalary} LPA`}
               </span>
 
               <span className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
