@@ -83,8 +83,9 @@ Jobify is a full-stack job portal built using the MERN stack that connects job s
 
 ## 📂 Project Structure
 
+
+```text
 Jobify
-│
 ├── backend
 │   ├── src
 │   │   ├── config
@@ -107,6 +108,7 @@ Jobify
 │   └── vercel.json
 │
 └── README.md
+```
 
 
 ## 🗄 Database Models
@@ -217,15 +219,13 @@ npm run dev
 
 ## 📸 Screenshots
 
-![Home](frontend/src/assets/screenshots/home.png)
+![Home](frontend/src/assets/screenshots/Home.png)
 
-![Signup](frontend/src/assets/screenshots/signup.png)
+![Signup](frontend/src/assets/screenshots/Signup.png)
 
 ![Candidate Dashboard](frontend/src/assets/screenshots/Candidate-Dashboard.png)
 
 ![Job Details](frontend/src/assets/screenshots/Job-Details.png)
-
-![Profile](frontend/src/assets/screenshots/Profile.png)
 
 ![Candidate Profile](frontend/src/assets/screenshots/Candidate-Profile.png)
 
